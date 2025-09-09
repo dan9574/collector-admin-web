@@ -1,17 +1,34 @@
-<<<<<<< HEAD
-# collector-admin-web
-React + Vite + Tailwind + Ant Design admin UI; dev proxy to /api on port 8081.
-=======
-# React + Vite
+## Project Overview
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains the **frontend part** of the Collector Admin demo system.  
+It is built with **React + Vite + Tailwind CSS + Ant Design**, and is designed to work in a **front-end / back-end separated architecture**.  
+The corresponding backend implementation can be found here:  
+👉 [collector-admin-backend](https://github.com/dan9574/collector-admin-backend)
 
-Currently, two official plugins are available:
+## Core Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **UI Modules**: Templates, Tasks, Export Management, System Management.  
+- **API Integration**: Connects to the backend REST API (Spring Boot) running on port **8081**.  
+- **Authentication**: Cookie-based session management, login/logout flow.  
+- **Styling**: Tailwind CSS with custom theme, Ant Design components.  
 
-## Expanding the ESLint configuration
+## Usage
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
->>>>>>> a3c8c67 (init: React + Vite + Tailwind frontend (connected to backend API))
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Run the frontend (default port: 5173, proxy to backend 8081):
+```bash
+npm run dev
+```
+3. Access the system UI in your browser:
+
+```arduino
+http://localhost:5173
+```
+
+Related Repositories
+collector-admin-backend — Spring Boot + JPA/PostgreSQL backend with cookie-session authentication.
+
+This frontend repo and the linked backend repo together form a complete full-stack demo showcasing authentication, task management, templates, and export modules in a separated architecture.
