@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据采集模板详情</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#1D4ED8',
+secondary: '#10B981'
+},
+borderRadius: {
+'none': '0px',
+'sm': '2px',
+DEFAULT: '4px',
+'md': '8px',
+'lg': '12px',
+'xl': '16px',
+'2xl': '20px',
+'3xl': '24px',
+'full': '9999px',
+'button': '4px'
+}
+}
+}
+}
+</script>
+<style>
+body {
+font-family: 'Inter', sans-serif;
+min-height: 1024px;
+}
+.nav-item.active {
+background-color: rgba(255, 255, 255, 0.1);
+}
+.nav-item:hover {
+background-color: rgba(255, 255, 255, 0.05);
+}
+.log-entry {
+border-bottom: 1px solid #E5E7EB;
+}
+.log-entry:last-child {
+border-bottom: none;
+}
+.preview-table {
+max-height: 200px;
+overflow-y: auto;
+}
+.preview-table::-webkit-scrollbar {
+width: 6px;
+height: 6px;
+}
+.preview-table::-webkit-scrollbar-thumb {
+background-color: #D1D5DB;
+border-radius: 3px;
+}
+.log-container {
+max-height: 200px;
+overflow-y: auto;
+}
+.log-container::-webkit-scrollbar {
+width: 6px;
+}
+.log-container::-webkit-scrollbar-thumb {
+background-color: #D1D5DB;
+border-radius: 3px;
+}
+.field-item {
+cursor: move;
+}
+.field-item:hover {
+background-color: #F3F4F6;
+}
+</style>
+</head>
+<body class="bg-gray-50 flex">
+<!-- 左侧导航 -->
+<div class="w-60 bg-gray-800 text-white h-screen fixed">
+<div class="p-4 border-b border-gray-700">
+<div class="text-xl font-['Pacifico']">logo</div>
+</div>
+<div class="p-4">
+<div class="text-xs uppercase text-gray-400 mb-2">数据采集</div>
+<div class="space-y-1">
+<a href="#" class="nav-item active flex items-center px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-700">
+<i class="fas fa-clipboard-list w-5 h-5 mr-2 flex justify-center items-center"></i>
+模板中心
+</a>
+<a href="#" class="nav-item flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white">
+<i class="fas fa-tasks w-5 h-5 mr-2 flex justify-center items-center"></i>
+任务管理
+</a>
+<a href="#" class="nav-item flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white">
+<i class="fas fa-cog w-5 h-5 mr-2 flex justify-center items-center"></i>
+系统管理
+</a>
+</div>
+</div>
+</div>
+<!-- 主内容区 -->
+<div class="flex-1 ml-60">
+<!-- 顶部信息栏 -->
+<div class="bg-white shadow-sm p-6 sticky top-0 z-10">
+<div class="max-w-6xl mx-auto flex justify-between items-start">
+<div>
+<h1 class="text-xl font-bold text-gray-900">电商平台商品数据采集模板</h1>
+<div class="mt-2 text-sm text-gray-500">
+<div class="flex items-center">
+<i class="fas fa-info-circle w-4 h-4 mr-1 flex justify-center items-center"></i>
+<span>采集电商平台商品详情页数据，包括价格、销量、评价等信息</span>
+</div>
+<div class="flex items-center mt-1">
+<i class="fas fa-link w-4 h-4 mr-1 flex justify-center items-center"></i>
+<span>https://www.example.com/products</span>
+</div>
+<div class="flex items-center mt-1">
+<i class="fas fa-clock w-4 h-4 mr-1 flex justify-center items-center"></i>
+<span>更新时间：2023-06-15</span>
+</div>
+</div>
+</div>
+<div class="flex space-x-3">
+<button class="!rounded-button whitespace-nowrap bg-primary hover:bg-blue-700 text-white px-4 py-2 text-sm font-medium">
+<i class="fas fa-play w-4 h-4 mr-2 flex justify-center items-center"></i>
+立即使用
+</button>
+<button class="!rounded-button whitespace-nowrap border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 text-sm font-medium">
+<i class="fas fa-history w-4 h-4 mr-2 flex justify-center items-center"></i>
+历史任务
+</button>
+</div>
+</div>
+</div>
+<!-- 主内容 -->
+<div class="max-w-6xl mx-auto p-6 space-y-6">
+<!-- 区域参数卡片 -->
+<div class="bg-white rounded-lg shadow-sm p-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-map-marker-alt w-5 h-5 mr-2 flex justify-center items-center text-primary"></i>
+<h2 class="text-lg font-medium text-gray-900">区域参数</h2>
+</div>
+<button class="text-gray-400 hover:text-gray-500">
+<i class="fas fa-chevron-up w-5 h-5 flex justify-center items-center"></i>
+</button>
+</div>
+<div class="mt-4">
+<div class="flex items-center space-x-4">
+<div class="flex items-center">
+<input id="all-region" name="region-type" type="radio" checked class="h-4 w-4 text-primary border-gray-300 focus:ring-primary">
+<label for="all-region" class="ml-2 block text-sm font-medium text-gray-700">全国</label>
+</div>
+<div class="flex items-center">
+<input id="specific-region" name="region-type" type="radio" class="h-4 w-4 text-primary border-gray-300 focus:ring-primary">
+<label for="specific-region" class="ml-2 block text-sm font-medium text-gray-700">指定区域</label>
+</div>
+</div>
+<div class="mt-4 hidden" id="region-selector">
+<div class="grid grid-cols-3 gap-4">
+<div>
+<label for="province" class="block text-sm font-medium text-gray-700">省份</label>
+<select id="province" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm">
+<option>请选择省份</option>
+<option>北京市</option>
+<option>上海市</option>
+<option>广东省</option>
+<option>浙江省</option>
+<option>江苏省</option>
+</select>
+</div>
+<div>
+<label for="city" class="block text-sm font-medium text-gray-700">城市</label>
+<select id="city" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm" disabled>
+<option>请先选择省份</option>
+</select>
+</div>
+<div>
+<label for="district" class="block text-sm font-medium text-gray-700">区县</label>
+<select id="district" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm" disabled>
+<option>请先选择城市</option>
+</select>
+</div>
+</div>
+<div class="mt-4">
+<div class="text-sm font-medium text-gray-700 mb-2">已选区域</div>
+<div class="flex flex-wrap gap-2" id="selected-regions">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">全国</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 依赖数据卡片 -->
+<div class="bg-white rounded-lg shadow-sm p-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-database w-5 h-5 mr-2 flex justify-center items-center text-primary"></i>
+<h2 class="text-lg font-medium text-gray-900">依赖数据</h2>
+</div>
+<button class="text-gray-400 hover:text-gray-500">
+<i class="fas fa-chevron-up w-5 h-5 flex justify-center items-center"></i>
+</button>
+</div>
+<div class="mt-4">
+<div class="space-y-4">
+<div>
+<label for="data-source" class="block text-sm font-medium text-gray-700">选择已有数据表</label>
+<select id="data-source" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm">
+<option value="">请选择数据表</option>
+<option value="1">电商商品列表(2023-06-10)</option>
+<option value="2">京东商品关键词搜索(2023-06-05)</option>
+<option value="3">天猫店铺商品(2023-05-28)</option>
+</select>
+</div>
+<div class="relative">
+<div class="absolute inset-0 flex items-center" aria-hidden="true">
+<div class="w-full border-t border-gray-300"></div>
+</div>
+<div class="relative flex justify-center">
+<span class="bg-white px-2 text-sm text-gray-500">或</span>
+</div>
+</div>
+<div>
+<label for="file-upload" class="block text-sm font-medium text-gray-700">上传CSV文件</label>
+<div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+<div class="space-y-1 text-center">
+<div class="flex text-sm text-gray-600">
+<label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-primary hover:text-blue-500 focus-within:outline-none">
+<span>上传文件</span>
+<input id="file-upload" name="file-upload" type="file" class="sr-only">
+</label>
+<p class="pl-1">或拖拽到此处</p>
+</div>
+<p class="text-xs text-gray-500">CSV格式，最大10MB</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 border-t border-gray-200 pt-4">
+<div class="text-sm font-medium text-gray-700">当前数据源</div>
+<div class="mt-2 text-sm text-gray-500">未选择数据源</div>
+</div>
+</div>
+</div>
+<!-- 字段筛选卡片 -->
+<div class="bg-white rounded-lg shadow-sm p-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-filter w-5 h-5 mr-2 flex justify-center items-center text-primary"></i>
+<h2 class="text-lg font-medium text-gray-900">字段筛选</h2>
+</div>
+<button class="text-gray-400 hover:text-gray-500">
+<i class="fas fa-chevron-up w-5 h-5 flex justify-center items-center"></i>
+</button>
+</div>
+<div class="mt-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4">
+<div class="flex items-center">
+<input id="all-fields" name="field-type" type="radio" checked class="h-4 w-4 text-primary border-gray-300 focus:ring-primary">
+<label for="all-fields" class="ml-2 block text-sm font-medium text-gray-700">完整字段</label>
+</div>
+<div class="flex items-center">
+<input id="partial-fields" name="field-type" type="radio" class="h-4 w-4 text-primary border-gray-300 focus:ring-primary">
+<label for="partial-fields" class="ml-2 block text-sm font-medium text-gray-700">筛选部分字段</label>
+</div>
+</div>
+<button class="text-sm text-primary hover:text-blue-700">重置选择</button>
+</div>
+<div class="mt-4 hidden" id="field-selector">
+<div class="grid grid-cols-3 gap-4">
+<div class="space-y-2">
+<div class="text-sm font-medium text-gray-700">商品信息</div>
+<div class="space-y-2">
+<div class="field-item flex items-center px-3 py-2 border border-gray-200 rounded-md">
+<input id="field-1" type="checkbox" class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary">
+<label for="field-1" class="ml-2 block text-sm text-gray-700">商品ID</label>
+</div>
+<div class="field-item flex items-center px-3 py-2 border border-gray-200 rounded-md">
+<input id="field-2" type="checkbox" class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary">
+<label for="field-2" class="ml-2 block text-sm text-gray-700">商品名称</label>
+</div>
+<div class="field-item flex items-center px-3 py-2 border border-gray-200 rounded-md">
+<input id="field-3" type="checkbox" class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary">
+<label for="field-3" class="ml-2 block text-sm text-gray-700">商品图片</label>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="text-sm font-medium text-gray-700">价格信息</div>
+<div class="space-y-2">
+<div class="field-item flex items-center px-3 py-2 border border-gray-200 rounded-md">
+<input id="field-4" type="checkbox" class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary">
+<label for="field-4" class="ml-2 block text-sm text-gray-700">当前价格</label>
+</div>
+<div class="field-item flex items-center px-3 py-2 border border-gray-200 rounded-md">
+<input id="field-5" type="checkbox" class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary">
+<label for="field-5" class="ml-2 block text-sm text-gray-700">原价</label>
+</div>
+<div class="field-item flex items-center px-3 py-2 border border-gray-200 rounded-md">
+<input id="field-6" type="checkbox" class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary">
+<label for="field-6" class="ml-2 block text-sm text-gray-700">折扣信息</label>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="text-sm font-medium text-gray-700">销售信息</div>
+<div class="space-y-2">
+<div class="field-item flex items-center px-3 py-2 border border-gray-200 rounded-md">
+<input id="field-7" type="checkbox" class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary">
+<label for="field-7" class="ml-2 block text-sm text-gray-700">月销量</label>
+</div>
+<div class="field-item flex items-center px-3 py-2 border border-gray-200 rounded-md">
+<input id="field-8" type="checkbox" class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary">
+<label for="field-8" class="ml-2 block text-sm text-gray-700">累计评价</label>
+</div>
+<div class="field-item flex items-center px-3 py-2 border border-gray-200 rounded-md">
+<input id="field-9" type="checkbox" class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary">
+<label for="field-9" class="ml-2 block text-sm text-gray-700">好评率</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-6">
+<div class="text-sm font-medium text-gray-700 mb-2">数据预览</div>
+<div class="preview-table border border-gray-200 rounded-md overflow-hidden">
+<table class="min-w-full divide-y divide-gray-200">
+<thead class="bg-gray-50">
+<tr>
+<th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">商品ID</th>
+<th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">商品名称</th>
+<th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">当前价格</th>
+<th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">月销量</th>
+<th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">累计评价</th>
+</tr>
+</thead>
+<tbody class="bg-white divide-y divide-gray-200">
+<tr>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">100001</td>
+<td class="px-3 py-2 text-sm text-gray-500">Apple iPhone 13 Pro Max 256GB</td>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">¥9,999</td>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">5,432</td>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">12,345</td>
+</tr>
+<tr>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">100002</td>
+<td class="px-3 py-2 text-sm text-gray-500">Samsung Galaxy S22 Ultra 512GB</td>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">¥8,999</td>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">3,210</td>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">8,765</td>
+</tr>
+<tr>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">100003</td>
+<td class="px-3 py-2 text-sm text-gray-500">Xiaomi 12 Pro 256GB</td>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">¥5,299</td>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">7,654</td>
+<td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">15,678</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- 代理设置卡片 -->
+<div class="bg-white rounded-lg shadow-sm p-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-server w-5 h-5 mr-2 flex justify-center items-center text-primary"></i>
+<h2 class="text-lg font-medium text-gray-900">代理设置</h2>
+</div>
+<button class="text-gray-400 hover:text-gray-500">
+<i class="fas fa-chevron-up w-5 h-5 flex justify-center items-center"></i>
+</button>
+</div>
+<div class="mt-4">
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<span class="text-sm font-medium text-gray-700 mr-2">启用代理</span>
+<button type="button" class="bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" role="switch" aria-checked="false">
+<span class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex-1">
+<label for="proxy-select" class="block text-sm font-medium text-gray-700">选择代理</label>
+<select id="proxy-select" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm" disabled>
+<option value="">请选择代理</option>
+<option value="1">美国代理组</option>
+<option value="2">欧洲代理组</option>
+<option value="3">亚洲代理组</option>
+</select>
+</div>
+<div class="flex-none w-36">
+<label class="block text-sm font-medium text-gray-700">剩余进程</label>
+<div class="mt-1 text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded-md border border-gray-200" id="remaining-processes">--</div>
+</div>
+</div>
+<div class="mt-4">
+<div class="flex items-center justify-between">
+<div class="text-sm text-gray-600">推荐配置：<span id="recommended-threads" class="text-primary font-medium">3</span> 个进程，预计耗时 <span id="estimated-time" class="text-primary font-medium">约 2 小时</span></div>
+<button type="button" id="apply-recommended" class="text-sm text-primary hover:text-blue-700" disabled>应用推荐</button>
+</div>
+<div class="mt-2">
+<label for="proxy-threads" class="block text-sm font-medium text-gray-700">设置任务进程数</label>
+<div class="mt-1 flex items-center gap-2">
+<button type="button" id="decrease-threads" class="!rounded-button whitespace-nowrap w-8 h-8 inline-flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+<i class="fas fa-minus w-3 h-3 flex justify-center items-center"></i>
+</button>
+<input type="number" id="proxy-threads" class="block w-20 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm text-center" min="1" max="10" value="1" disabled>
+<button type="button" id="increase-threads" class="!rounded-button whitespace-nowrap w-8 h-8 inline-flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+<i class="fas fa-plus w-3 h-3 flex justify-center items-center"></i>
+</button>
+<span class="text-sm text-gray-500 ml-2">最大可设置 <span id="max-threads">10</span> 个进程</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 任务配置卡片 -->
+<div class="bg-white rounded-lg shadow-sm p-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-tasks w-5 h-5 mr-2 flex justify-center items-center text-primary"></i>
+<h2 class="text-lg font-medium text-gray-900">任务配置</h2>
+</div>
+<button class="text-gray-400 hover:text-gray-500">
+<i class="fas fa-chevron-up w-5 h-5 flex justify-center items-center"></i>
+</button>
+</div>
+<div class="mt-4">
+<div class="space-y-4">
+<div>
+<label for="task-name" class="block text-sm font-medium text-gray-700">任务名称 <span class="text-red-500">*</span></label>
+<input type="text" id="task-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm" placeholder="例如：京东手机商品采集202306">
+</div>
+<div>
+<label for="task-group" class="block text-sm font-medium text-gray-700">任务分组</label>
+<div class="mt-1 flex rounded-md shadow-sm">
+<select id="task-group" class="flex-1 min-w-0 block w-full rounded-none rounded-l-md border-gray-300 focus:border-primary focus:ring-primary text-sm">
+<option value="">选择分组</option>
+<option value="1">电商数据</option>
+<option value="2">社交媒体</option>
+<option value="3">新闻资讯</option>
+</select>
+<input type="text" class="flex-1 min-w-0 block w-full rounded-none rounded-r-md border-gray-300 focus:border-primary focus:ring-primary text-sm" placeholder="或输入新分组名称">
+</div>
+</div>
+<div>
+<label for="task-version" class="block text-sm font-medium text-gray-700">任务版本</label>
+<div class="mt-1 grid grid-cols-2 gap-4">
+<select id="task-year" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm">
+<option value="2025" selected>2025 年</option>
+<option value="2024">2024 年</option>
+<option value="2023">2023 年</option>
+</select>
+<select id="task-quarter" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm">
+<option value="Q3" selected>第三季度</option>
+<option value="Q2">第二季度</option>
+<option value="Q1">第一季度</option>
+<option value="Q4">第四季度</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 任务进程卡片 -->
+<div class="bg-white rounded-lg shadow-sm p-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<i class="fas fa-chart-line w-5 h-5 mr-2 flex justify-center items-center text-primary"></i>
+<h2 class="text-lg font-medium text-gray-900">任务进程</h2>
+</div>
+<button class="text-gray-400 hover:text-gray-500">
+<i class="fas fa-chevron-up w-5 h-5 flex justify-center items-center"></i>
+</button>
+</div>
+<div class="mt-4">
+<div class="flex space-x-3">
+<button class="!rounded-button whitespace-nowrap bg-primary hover:bg-blue-700 text-white px-4 py-2 text-sm font-medium">
+<i class="fas fa-play w-4 h-4 mr-2 flex justify-center items-center"></i>
+开始采集
+</button>
+<button class="!rounded-button whitespace-nowrap border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 text-sm font-medium" disabled>
+<i class="fas fa-pause w-4 h-4 mr-2 flex justify-center items-center"></i>
+暂停采集
+</button>
+<button class="!rounded-button whitespace-nowrap border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 text-sm font-medium" disabled>
+<i class="fas fa-stop w-4 h-4 mr-2 flex justify-center items-center"></i>
+终止采集
+</button>
+<button class="!rounded-button whitespace-nowrap border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 text-sm font-medium" disabled>
+<i class="fas fa-redo w-4 h-4 mr-2 flex justify-center items-center"></i>
+重新开始
+</button>
+<button class="!rounded-button whitespace-nowrap border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 text-sm font-medium" disabled>
+<i class="fas fa-file-export w-4 h-4 mr-2 flex justify-center items-center"></i>
+导出数据
+</button>
+</div>
+<div class="mt-4">
+<div class="text-sm font-medium text-gray-700 mb-2">采集日志</div>
+<div class="log-container border border-gray-200 rounded-md p-3 bg-gray-50">
+<div class="log-entry py-1 text-xs text-gray-600">
+<span class="text-gray-500">[2023-06-15 10:00:00]</span> 任务已创建，等待启动...
+</div>
+<div class="log-entry py-1 text-xs text-gray-600">
+<span class="text-gray-500">[2023-06-15 10:00:01]</span> 正在初始化采集参数...
+</div>
+<div class="log-entry py-1 text-xs text-gray-600">
+<span class="text-gray-500">[2023-06-15 10:00:02]</span> 已加载目标网站: https://www.example.com/products
+</div>
+<div class="log-entry py-1 text-xs text-gray-600">
+<span class="text-gray-500">[2023-06-15 10:00:03]</span> 区域参数: 全国
+</div>
+<div class="log-entry py-1 text-xs text-gray-600">
+<span class="text-gray-500">[2023-06-15 10:00:04]</span> 字段设置: 完整字段
+</div>
+<div class="log-entry py-1 text-xs text-gray-600">
+<span class="text-gray-500">[2023-06-15 10:00:05]</span> 代理设置: 未启用代理
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+// 区域选择交互
+document.getElementById('specific-region').addEventListener('change', function() {
+document.getElementById('region-selector').classList.toggle('hidden', !this.checked);
+if (this.checked) {
+document.querySelector('#selected-regions').innerHTML = '';
+} else {
+document.querySelector('#selected-regions').innerHTML = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">全国</span>';
+}
+});
+// 代理开关交互
+const proxyData = {
+'1': { remaining: 12, recommended: 3, time: '约 2 小时' },
+'2': { remaining: 8, recommended: 2, time: '约 3 小时' },
+'3': { remaining: 5, recommended: 1, time: '约 4 小时' }
+};
+document.querySelector('[role="switch"]').addEventListener('click', function() {
+const isChecked = this.getAttribute('aria-checked') === 'true';
+this.setAttribute('aria-checked', !isChecked);
+this.querySelector('span').classList.toggle('translate-x-5', !isChecked);
+this.classList.toggle('bg-primary', !isChecked);
+this.classList.toggle('bg-gray-200', isChecked);
+const proxySelect = document.getElementById('proxy-select');
+const proxyThreads = document.getElementById('proxy-threads');
+const decreaseBtn = document.getElementById('decrease-threads');
+const increaseBtn = document.getElementById('increase-threads');
+const applyRecommendedBtn = document.getElementById('apply-recommended');
+proxySelect.disabled = isChecked;
+proxyThreads.disabled = isChecked;
+decreaseBtn.disabled = isChecked;
+increaseBtn.disabled = isChecked;
+applyRecommendedBtn.disabled = isChecked;
+if (!isChecked) {
+proxySelect.value = '1';
+updateProxyInfo('1');
+proxyThreads.value = '1';
+} else {
+proxySelect.value = '';
+document.getElementById('remaining-processes').textContent = '--';
+document.getElementById('recommended-threads').textContent = '--';
+document.getElementById('estimated-time').textContent = '--';
+document.getElementById('max-threads').textContent = '10';
+proxyThreads.value = '1';
+}
+});
+document.getElementById('proxy-select').addEventListener('change', function() {
+if (this.value) {
+updateProxyInfo(this.value);
+}
+});
+document.getElementById('decrease-threads').addEventListener('click', function() {
+const input = document.getElementById('proxy-threads');
+if (input.value > 1) {
+input.value = parseInt(input.value) - 1;
+}
+updateThreadButtons();
+});
+document.getElementById('increase-threads').addEventListener('click', function() {
+const input = document.getElementById('proxy-threads');
+const maxThreads = parseInt(document.getElementById('max-threads').textContent);
+if (parseInt(input.value) < maxThreads) {
+input.value = parseInt(input.value) + 1;
+}
+updateThreadButtons();
+});
+document.getElementById('apply-recommended').addEventListener('click', function() {
+const recommended = parseInt(document.getElementById('recommended-threads').textContent);
+document.getElementById('proxy-threads').value = recommended;
+updateThreadButtons();
+});
+function updateProxyInfo(proxyId) {
+const data = proxyData[proxyId];
+document.getElementById('remaining-processes').textContent = data.remaining + ' 个';
+document.getElementById('recommended-threads').textContent = data.recommended;
+document.getElementById('estimated-time').textContent = data.time;
+document.getElementById('max-threads').textContent = Math.min(10, data.remaining);
+document.getElementById('proxy-threads').max = Math.min(10, data.remaining);
+updateThreadButtons();
+}
+function updateThreadButtons() {
+const input = document.getElementById('proxy-threads');
+const currentValue = parseInt(input.value);
+const maxValue = parseInt(input.max);
+document.getElementById('decrease-threads').disabled = currentValue <= 1;
+document.getElementById('increase-threads').disabled = currentValue >= maxValue;
+}
+// 字段筛选交互
+document.getElementById('partial-fields').addEventListener('change', function() {
+document.getElementById('field-selector').classList.toggle('hidden', !this.checked);
+});
+// 拖拽排序功能
+const fieldItems = document.querySelectorAll('.field-item');
+fieldItems.forEach(item => {
+item.setAttribute('draggable', 'true');
+item.addEventListener('dragstart', function(e) {
+e.dataTransfer.setData('text/plain', this.id);
+setTimeout(() => {
+this.classList.add('opacity-50');
+}, 0);
+});
+item.addEventListener('dragend', function() {
+this.classList.remove('opacity-50');
+});
+item.addEventListener('dragover', function(e) {
+e.preventDefault();
+const draggingItem = document.querySelector('.field-item.opacity-50');
+if (draggingItem !== this) {
+const bounding = this.getBoundingClientRect();
+const offset = bounding.y + bounding.height / 2;
+if (e.clientY > offset) {
+this.parentNode.insertBefore(draggingItem, this.nextSibling);
+} else {
+this.parentNode.insertBefore(draggingItem, this);
+}
+}
+});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据采集平台 - 模板中心</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#3B82F6',
+secondary: '#10B981',
+},
+borderRadius: {
+'none': '0px',
+'sm': '2px',
+DEFAULT: '4px',
+'md': '8px',
+'lg': '12px',
+'xl': '16px',
+'2xl': '20px',
+'3xl': '24px',
+'full': '9999px',
+'button': '4px'
+}
+}
+}
+}
+</script>
+<style>
+.fa-icon {
+display: flex;
+justify-content: center;
+align-items: center;
+width: 20px;
+height: 20px;
+}
+#collection-type-filter:hover .hidden,
+#template-status-filter:hover .hidden,
+#sort-type-filter:hover .hidden {
+display: block;
+}
+.dropdown-menu {
+display: none;
+}
+.dropdown:hover .dropdown-menu {
+display: block;
+}
+.template-card:hover {
+transform: translateY(-4px);
+box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+.status-active {
+background-color: #ECFDF5;
+color: #10B981;
+}
+.status-inactive {
+background-color: #F3F4F6;
+color: #6B7280;
+}
+.status-updating {
+background-color: #EFF6FF;
+color: #3B82F6;
+}
+</style>
+</head>
+<body class="min-h-[1024px] bg-gray-50 flex">
+<!-- 左侧导航栏 -->
+<div class="w-[200px] bg-gray-800 text-white flex flex-col h-screen fixed">
+<!-- Logo -->
+<div class="p-6 border-b border-gray-700">
+<h1 class="text-2xl font-['Pacifico']">logo</h1>
+</div>
+<!-- 导航菜单 -->
+<nav class="flex-1 p-4 space-y-2">
+<a href="#" class="flex items-center p-3 rounded-md bg-gray-700 text-white">
+<i class="fas fa-clipboard-list fa-icon mr-3"></i>
+<span>模板中心</span>
+</a>
+<a href="#" class="flex items-center p-3 rounded-md text-gray-300 hover:bg-gray-700">
+<i class="fas fa-tasks fa-icon mr-3"></i>
+<span>任务管理</span>
+</a>
+<a href="#" class="flex items-center p-3 rounded-md text-gray-300 hover:bg-gray-700">
+<i class="fas fa-cog fa-icon mr-3"></i>
+<span>系统管理</span>
+</a>
+</nav>
+<!-- 用户信息 -->
+<div class="p-4 border-t border-gray-700">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center">
+<i class="fas fa-user fa-icon"></i>
+</div>
+<div class="ml-3">
+<div class="font-medium">张明远</div>
+<div class="text-xs text-gray-400">高级数据工程师</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 右侧内容区 -->
+<div class="flex-1 ml-[200px] p-8">
+<!-- 顶部标题和搜索 -->
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-2xl font-bold text-gray-800">模板中心</h2>
+<div class="relative w-96">
+<input type="text" placeholder="搜索模板名称..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+<i class="fas fa-search fa-icon absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+</div>
+</div>
+<!-- 筛选区域 -->
+<div class="flex justify-between items-start mb-8">
+<!-- 场景分类 -->
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 bg-primary text-white rounded-button whitespace-nowrap">全部</button>
+<button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:border-primary hover:text-primary rounded-button whitespace-nowrap">房产</button>
+<button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:border-primary hover:text-primary rounded-button whitespace-nowrap">品牌业态</button>
+<button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:border-primary hover:text-primary rounded-button whitespace-nowrap">电商</button>
+<button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:border-primary hover:text-primary rounded-button whitespace-nowrap">金融</button>
+<button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:border-primary hover:text-primary rounded-button whitespace-nowrap">教育</button>
+</div>
+<!-- 功能按钮组 -->
+<div class="flex items-center space-x-3">
+<!-- 采集方式筛选 -->
+<div class="relative" id="collection-type-filter">
+<button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-button whitespace-nowrap flex items-center gap-2">
+采集方式 <i class="fas fa-chevron-down text-xs"></i>
+</button>
+<div class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+<div class="py-1">
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">全部</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">网站</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">小程序</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">APP</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">接口</a>
+</div>
+</div>
+</div>
+<!-- 模板状态筛选 -->
+<div class="relative" id="template-status-filter">
+<button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-button whitespace-nowrap flex items-center gap-2">
+模板状态 <i class="fas fa-chevron-down text-xs"></i>
+</button>
+<div class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+<div class="py-1">
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">全部</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">生效</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">失效</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">更新中</a>
+</div>
+</div>
+</div>
+<!-- 排序方式 -->
+<div class="relative" id="sort-type-filter">
+<button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-button whitespace-nowrap flex items-center gap-2">
+排序方式 <i class="fas fa-chevron-down text-xs"></i>
+</button>
+<div class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+<div class="py-1">
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">更新时间</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">使用次数</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 模板列表 -->
+<div class="grid grid-cols-4 gap-5">
+<!-- 模板卡片 1 -->
+<div class="template-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, website data logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">房产信息采集模板</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-active">生效</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">房产</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">网站</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集全国主要城市房产信息，包括价格、面积、户型等关键数据，支持自动更新。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-08-15</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+<!-- 模板卡片 2 -->
+<div class="template-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, e-commerce app data logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">电商APP商品采集</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-updating">更新中</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">电商</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">APP</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集主流电商平台APP商品信息，包括价格、销量、评价等数据，支持多平台对比。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-08-10</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+<!-- 模板卡片 3 -->
+<div class="template-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, retail store chain data logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">品牌门店信息采集</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-active">生效</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">品牌业态</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">网站</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集全国连锁品牌门店信息，包括位置、营业时间、联系方式等，支持地图标注。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-08-05</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+<!-- 模板卡片 4 -->
+<div class="template-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, financial data service logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">金融产品数据采集</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-active">生效</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">金融</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">接口</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集银行、保险、证券等金融产品信息，包括利率、期限、风险等级等关键指标。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-08-01</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+<!-- 模板卡片 5 -->
+<div class="template-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, restaurant mini program data logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">餐饮小程序数据采集</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-inactive">失效</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">品牌业态</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">小程序</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集餐饮品牌小程序数据，包括菜品、价格、评价等信息，支持多维度分析。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-07-25</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+<!-- 模板卡片 6 -->
+<div class="template-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, education institution data logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">教育机构信息采集</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-active">生效</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">教育</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">网站</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集全国教育机构信息，包括课程、师资、学费等数据，支持区域筛选。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-07-20</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+<!-- 模板卡片 7 -->
+<div class="template-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, brand website data logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">品牌网品牌数据</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-active">生效</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">品牌业态</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">网站</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集品牌基础信息、发展历程、门店分布等数据，支持多维度分析。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-08-02</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+<!-- 模板卡片 8 -->
+<div class="template-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, winning business data logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">赢商网品牌库数据</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-active">生效</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">品牌业态</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">网站</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集品牌商业数据，包括品牌档案、业态分布、拓展动态等信息。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-08-01</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+<!-- 模板卡片 9 -->
+<div class="template-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, fang tian xia new house data logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">房天下新房数据</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-active">生效</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">房产</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">网站</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集新房项目信息，包括楼盘信息、房价走势、开发商背景等数据。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-07-30</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+<!-- 模板卡片 10 -->
+<div class="template-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, fang tian xia second hand house data logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">房天下二手房数据</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-updating">更新中</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">房产</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">网站</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集二手房挂牌信息，包括房源详情、小区信息、价格走势等数据。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-07-28</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<img src="https://ai-public.mastergo.com/gen_page/map_placeholder_1280x720.png?query=minimalist logo design, education institution data logo icon, high quality, modern&width=32&height=32&orientation=squarish" class="w-8 h-8 rounded-md object-cover" alt="网站logo"/>
+<h3 class="text-lg font-semibold text-gray-800">教育机构信息采集</h3>
+</div>
+<span class="text-xs px-2 py-1 rounded-full status-active">生效</span>
+</div>
+<div class="flex flex-wrap gap-1 mb-3">
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">教育</span>
+<span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">网站</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">采集全国教育机构信息，包括课程、师资、学费等数据，支持区域筛选。</p>
+<div class="flex justify-between items-center text-xs text-gray-500">
+<span>更新于 2023-07-20</span>
+<button class="text-primary hover:text-primary-dark">查看详情 <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+</div>
+<!-- 分页 -->
+<div class="fixed bottom-8 left-[200px] right-0 flex justify-center">
+<nav class="inline-flex rounded-md shadow-sm">
+<button class="px-3 py-1 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+<i class="fas fa-chevron-left"></i>
+</button>
+<button class="px-3 py-1 border-t border-b border-gray-300 bg-primary text-white">1</button>
+<button class="px-3 py-1 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">2</button>
+<button class="px-3 py-1 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">3</button>
+<button class="px-3 py-1 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-r-md">
+<i class="fas fa-chevron-right"></i>
+</button>
+</nav>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据采集任务管理系统</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#3B82F6',
+secondary: '#10B981',
+dark: '#1F2937',
+light: '#F9FAFB'
+},
+borderRadius: {
+'none': '0px',
+'sm': '2px',
+DEFAULT: '4px',
+'md': '8px',
+'lg': '12px',
+'xl': '16px',
+'2xl': '20px',
+'3xl': '24px',
+'full': '9999px',
+'button': '4px'
+}
+}
+}
+}
+</script>
+<style>
+body {
+font-family: 'Inter', sans-serif;
+min-height: 1024px;
+}
+.sidebar {
+width: 240px;
+transition: all 0.3s;
+}
+.content {
+margin-left: 240px;
+width: calc(100% - 240px);
+}
+.nav-item.active {
+background-color: rgba(255, 255, 255, 0.1);
+}
+.task-status-running {
+background-color: #ECFDF5;
+color: #10B981;
+}
+.task-status-stopped {
+background-color: #F3F4F6;
+color: #6B7280;
+}
+.task-status-completed {
+background-color: #EFF6FF;
+color: #3B82F6;
+}
+.task-group-item.active {
+background-color: rgba(255, 255, 255, 0.1);
+border-left: 3px solid #3B82F6;
+}
+.search-input:focus {
+outline: none;
+box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+.modal-overlay {
+background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-content {
+max-height: 90vh;
+}
+.export-history-item:hover {
+background-color: #F9FAFB;
+}
+i {
+display: flex;
+justify-content: center;
+align-items: center;
+}
+</style>
+</head>
+<body class="bg-gray-50">
+<div class="flex h-screen overflow-hidden">
+<!-- 左侧导航栏 -->
+<div class="sidebar bg-dark text-white h-full fixed">
+<div class="p-4 border-b border-gray-700">
+<div class="flex items-center">
+<div class="font-['Pacifico'] text-2xl text-white">logo</div>
+</div>
+</div>
+<div class="p-4">
+<div class="text-xs uppercase text-gray-400 mb-2 px-2">主菜单</div>
+<ul>
+<li class="mb-1">
+<a href="#" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-gray-300 hover:text-white">
+<i class="fas fa-th-large w-5 h-5 mr-3"></i>
+<span>模板中心</span>
+</a>
+</li>
+<li class="mb-1">
+<a href="#" class="flex items-center px-3 py-2 rounded bg-gray-700 text-white">
+<i class="fas fa-tasks w-5 h-5 mr-3"></i>
+<span>任务管理</span>
+</a>
+</li>
+<li class="mb-1">
+<a href="#" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-gray-300 hover:text-white">
+<i class="fas fa-cog w-5 h-5 mr-3"></i>
+<span>系统管理</span>
+</a>
+</li>
+</ul>
+</div>
+</div>
+<!-- 右侧内容区 -->
+<div class="content flex flex-col h-full">
+<!-- 顶部操作区 -->
+<div class="bg-white border-b border-gray-200 p-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-4">
+<div class="flex space-x-1">
+<button class="px-3 py-1 bg-primary text-white rounded-button whitespace-nowrap">全部</button>
+<button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-button whitespace-nowrap hover:bg-gray-200">运行中</button>
+<button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-button whitespace-nowrap hover:bg-gray-200">已停止</button>
+<button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-button whitespace-nowrap hover:bg-gray-200">已完成</button>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<div class="relative">
+<input type="text" placeholder="搜索任务名称..." class="search-input pl-9 pr-4 py-2 border border-gray-300 rounded w-64 focus:border-primary">
+<i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+</div>
+<div class="flex items-center space-x-2">
+<button id="export-btn" class="px-3 py-2 bg-white border border-gray-300 rounded-button whitespace-nowrap hover:bg-gray-50 flex items-center">
+<i class="fas fa-file-export w-4 h-4 mr-2"></i>
+<span>导出</span>
+</button>
+<button id="export-history-btn" class="px-3 py-2 bg-white border border-gray-300 rounded-button whitespace-nowrap hover:bg-gray-50 flex items-center">
+<i class="fas fa-history w-4 h-4 mr-2"></i>
+<span>导出记录</span>
+</button>
+</div>
+<button class="px-3 py-2 bg-primary text-white rounded-button whitespace-nowrap hover:bg-blue-600 flex items-center">
+<i class="fas fa-plus w-4 h-4 mr-2"></i>
+<span>新建任务</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 任务列表区 -->
+<div class="flex-1 overflow-auto p-6">
+<div class="bg-white rounded-lg shadow-sm overflow-hidden">
+<table class="min-w-full divide-y divide-gray-200">
+<thead class="bg-gray-50">
+<tr>
+<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">任务名称</th>
+<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">采集状态</th>
+<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">采集用时</th>
+<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">采集次数</th>
+<th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+</tr>
+</thead>
+<tbody class="bg-white divide-y divide-gray-200">
+<tr>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10">
+<i class="fas fa-shopping-cart w-full h-full text-gray-400"></i>
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">天猫商品数据采集</div>
+<div class="text-sm text-gray-500">电商数据采集</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full task-status-running">
+<i class="fas fa-play w-3 h-3 mr-1"></i> 运行中
+</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2小时15分钟</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">24次</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-pause w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-stop w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-trash w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600">
+<i class="fas fa-ellipsis-h w-4 h-4"></i>
+</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10">
+<i class="fas fa-comments w-full h-full text-gray-400"></i>
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">微博舆情监控</div>
+<div class="text-sm text-gray-500">社交媒体监控</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full task-status-stopped">
+<i class="fas fa-pause w-3 h-3 mr-1"></i> 已停止
+</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">45分钟</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8次</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-play w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-stop w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-trash w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600">
+<i class="fas fa-ellipsis-h w-4 h-4"></i>
+</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10">
+<i class="fas fa-chart-line w-full h-full text-gray-400"></i>
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">京东竞品价格监控</div>
+<div class="text-sm text-gray-500">竞品分析</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full task-status-completed">
+<i class="fas fa-check w-3 h-3 mr-1"></i> 已完成
+</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5小时30分钟</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">36次</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-play w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-stop w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-trash w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600">
+<i class="fas fa-ellipsis-h w-4 h-4"></i>
+</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10">
+<i class="fas fa-search w-full h-full text-gray-400"></i>
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">小红书美妆产品评价</div>
+<div class="text-sm text-gray-500">市场调研</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full task-status-running">
+<i class="fas fa-play w-3 h-3 mr-1"></i> 运行中
+</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1小时20分钟</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12次</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-pause w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-stop w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-trash w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600">
+<i class="fas fa-ellipsis-h w-4 h-4"></i>
+</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10">
+<i class="fas fa-store w-full h-full text-gray-400"></i>
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">拼多多农产品销量</div>
+<div class="text-sm text-gray-500">电商数据采集</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full task-status-stopped">
+<i class="fas fa-pause w-3 h-3 mr-1"></i> 已停止
+</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3小时45分钟</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">18次</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-play w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-stop w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600 mr-3">
+<i class="fas fa-trash w-4 h-4"></i>
+</button>
+<button class="text-gray-400 hover:text-gray-600">
+<i class="fas fa-ellipsis-h w-4 h-4"></i>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+<div class="flex-1 flex justify-between sm:hidden">
+<a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">上一页</a>
+<a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">下一页</a>
+</div>
+<div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+<div>
+<p class="text-sm text-gray-700">
+显示 <span class="font-medium">1</span> 到 <span class="font-medium">5</span> 条，共 <span class="font-medium">23</span> 条
+</p>
+</div>
+<div>
+<nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+<a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+<span class="sr-only">上一页</span>
+<i class="fas fa-chevron-left w-4 h-4"></i>
+</a>
+<a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
+<a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</a>
+<a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">3</a>
+<span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+<a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">5</a>
+<a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+<span class="sr-only">下一页</span>
+<i class="fas fa-chevron-right w-4 h-4"></i>
+</a>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 导出任务弹窗 -->
+<div id="export-modal" class="fixed inset-0 z-50 hidden">
+<div class="modal-overlay absolute inset-0"></div>
+<div class="fixed inset-0 flex items-center justify-center p-4">
+<div class="modal-content bg-white rounded-lg shadow-xl max-w-lg w-full">
+<div class="p-6">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-medium text-gray-900">导出任务数据</h3>
+<button id="close-export-modal" class="text-gray-400 hover:text-gray-500">
+<i class="fas fa-times w-5 h-5"></i>
+</button>
+</div>
+<div class="mb-6">
+<div class="mb-4">
+<label class="block text-sm font-medium text-gray-700 mb-2">选择导出格式</label>
+<div class="flex space-x-4">
+<label class="inline-flex items-center">
+<input type="radio" class="form-radio h-4 w-4 text-primary" name="export-format" value="csv" checked>
+<span class="ml-2 text-gray-700">CSV 格式</span>
+</label>
+<label class="inline-flex items-center">
+<input type="radio" class="form-radio h-4 w-4 text-primary" name="export-format" value="database">
+<span class="ml-2 text-gray-700">数据库格式</span>
+</label>
+</div>
+</div>
+<div class="mb-4">
+<label class="block text-sm font-medium text-gray-700 mb-2">选择导出范围</label>
+<select class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+<option>当前页数据 (5条)</option>
+<option>全部数据 (23条)</option>
+<option>自定义选择</option>
+</select>
+</div>
+<div class="flex justify-end">
+<button class="px-4 py-2 bg-primary text-white rounded-button whitespace-nowrap hover:bg-blue-600">开始导出</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 导出历史记录弹窗 -->
+<div id="export-history-modal" class="fixed inset-0 z-50 hidden">
+<div class="modal-overlay absolute inset-0"></div>
+<div class="fixed inset-0 flex items-center justify-center p-4">
+<div class="modal-content bg-white rounded-lg shadow-xl max-w-2xl w-full">
+<div class="p-6">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-medium text-gray-900">导出历史记录</h3>
+<button id="close-export-history-modal" class="text-gray-400 hover:text-gray-500">
+<i class="fas fa-times w-5 h-5"></i>
+</button>
+</div>
+<div class="space-y-3">
+<div class="export-history-item p-4 border border-gray-200 rounded-md flex justify-between items-center">
+<div class="flex-1">
+<div class="flex items-center mb-1">
+<span class="text-sm font-medium text-gray-900 mr-2">天猫商品数据采集.csv</span>
+<span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已完成</span>
+</div>
+<div class="text-xs text-gray-500">导出时间：2025-08-07 14:30:45 | 文件大小：1.2MB</div>
+</div>
+<button class="ml-4 text-primary hover:text-blue-600">
+<i class="fas fa-download w-4 h-4"></i>
+</button>
+</div>
+<div class="export-history-item p-4 border border-gray-200 rounded-md flex justify-between items-center">
+<div class="flex-1">
+<div class="flex items-center mb-1">
+<span class="text-sm font-medium text-gray-900 mr-2">京东竞品价格监控.sql</span>
+<span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">处理中</span>
+</div>
+<div class="text-xs text-gray-500">导出时间：2025-08-07 13:15:22 | 预计文件大小：2.5MB</div>
+</div>
+<div class="ml-4 text-gray-400">
+<i class="fas fa-spinner fa-spin w-4 h-4"></i>
+</div>
+</div>
+<div class="export-history-item p-4 border border-gray-200 rounded-md flex justify-between items-center">
+<div class="flex-1">
+<div class="flex items-center mb-1">
+<span class="text-sm font-medium text-gray-900 mr-2">微博舆情监控.csv</span>
+<span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已完成</span>
+</div>
+<div class="text-xs text-gray-500">导出时间：2025-08-07 09:45:10 | 文件大小：0.8MB</div>
+</div>
+<button class="ml-4 text-primary hover:text-blue-600">
+<i class="fas fa-download w-4 h-4"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const exportBtn = document.getElementById('export-btn');
+const exportModal = document.getElementById('export-modal');
+const closeExportModal = document.getElementById('close-export-modal');
+const exportHistoryBtn = document.getElementById('export-history-btn');
+const exportHistoryModal = document.getElementById('export-history-modal');
+const closeExportHistoryModal = document.getElementById('close-export-history-modal');
+exportBtn.addEventListener('click', function() {
+exportModal.classList.remove('hidden');
+});
+closeExportModal.addEventListener('click', function() {
+exportModal.classList.add('hidden');
+});
+exportModal.addEventListener('click', function(e) {
+if (e.target === exportModal) {
+exportModal.classList.add('hidden');
+}
+});
+exportHistoryBtn.addEventListener('click', function() {
+exportHistoryModal.classList.remove('hidden');
+});
+closeExportHistoryModal.addEventListener('click', function() {
+exportHistoryModal.classList.add('hidden');
+});
+exportHistoryModal.addEventListener('click', function(e) {
+if (e.target === exportHistoryModal) {
+exportHistoryModal.classList.add('hidden');
+}
+});
+});
+</script>
+</body>
+</html>
